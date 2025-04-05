@@ -1,7 +1,7 @@
 {
   "id": "yakuza-fy",
   "title": "Yakuza-fy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": {
     "minimum": "12",
     "verified": "12"
@@ -28,6 +28,9 @@
         ]
     },
   "url": "https://github.com/WiNG-CoMM/yakuza-fy",
-  "manifest": "https://github.com/WiNG-CoMM/yakuza-fy/module.json",
-  "download": "https://github.com/WiNG-CoMM/yakuza-fy/yakuza-fy.zip"
+  "manifest": "https://raw.githubusercontent.com/WiNG-CoMM/yakuza-fy/refs/tags/v1.0.1/module.json",
+  "download": "https://github.com/WiNG-CoMM/yakuza-fy/releases/download/v1.0.1/yakuza-fy-1.0.1.zip",
+  "license": "GPL-3.0",
+  "sidebarIcon": "fas fa-bomb",
+  "sidebarLabel": "Yakuza-fy"
 }
