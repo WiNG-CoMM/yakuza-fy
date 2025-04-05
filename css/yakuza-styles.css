@@ -1,0 +1,82 @@
+@font-face {
+    font-family: 'EDO SZ';
+    src: url('../fonts/edosz.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.yakuza-intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('../images/background.jpg') center/cover no-repeat, rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    cursor: pointer;
+}
+
+.yakuza-intro-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: filter 1s ease; /* Add smooth filter transition */
+}
+
+.yakuza-intro-filtered {
+    filter: grayscale(1) sepia(0.2);
+}
+
+.yakuza-intro-text-wrapper {
+    position: absolute;
+    bottom: 8vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Adjust for portrait mode */
+@media (orientation: portrait) {
+    .yakuza-intro-text-wrapper {
+        bottom: 3vh;
+    }
+}
+
+.yakuza-intro-text {
+    font-family: 'EDO SZ', sans-serif;
+    color: #ad0a0a;
+    text-shadow: 2px 2px 0 #fff, 
+                -2px -2px 0 #fff,
+                2px -2px 0 #fff,
+                -2px 2px 0 #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    opacity: 0; /* Hidden until fade-in */
+    transform: translateY(10px);
+}
+
+.yakuza-title {
+    font-size: 6rem;
+    margin-bottom: 10px;
+}
+
+.yakuza-subtitle {
+    font-size: 2.5rem;
+    margin: 5px 0;
+}
+
+/* Fade-in effect */
+.yakuza-intro-text.show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 500ms, transform 500ms;
+}
