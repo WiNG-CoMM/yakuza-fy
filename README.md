@@ -1,7 +1,7 @@
 # Yakuza-fy
 
 > *“I never thought forever could be found in fists, blood, and honor... but it was.”*  
-> — Kristi Lynn, *Forever*
+> — Kristi Lynn, *Forever* (If her boyfriend was a Yakuza game main character)
 
 A humble tribute to the **Yakuza / Ryu Ga Gotoku** series, where storytelling, loyalty, and style collide in unforgettable ways.
 
@@ -24,7 +24,7 @@ If you love the **Yakuza / Ryu Ga Gotoku** as much as I do, buy and play their g
 Install via the Foundry VTT module manager by providing the manifest URL:
 
 ```plaintext
-https://github.com/WiNG-CoMM/yakuza-fy/module.json
+https://raw.githubusercontent.com/WiNG-CoMM/yakuza-fy/refs/heads/main/module.json
 ```
 
 Or clone/download the repository directly into your Data/modules folder.
