@@ -1,5 +1,13 @@
 # Yakuza-fy
 
+[![Latest Release](https://img.shields.io/github/v/release/WiNG-CoMM/yakuza-fy?style=for-the-badge&label=Latest%20Release)](https://github.com/WiNG-CoMM/yakuza-fy/releases)
+[![GitHub all releases](https://img.shields.io/github/downloads/WiNG-CoMM/yakuza-fy/total?style=for-the-badge&label=Total%20Downloads)](https://github.com/WiNG-CoMM/yakuza-fy/releases)
+[![GitHub release (latest by date)](https://img.shields.io/github/downloads/WiNG-CoMM/yakuza-fy/latest/total?style=for-the-badge&label=Latest%20Release%20Downloads)](https://github.com/WiNG-CoMM/yakuza-fy/releases/latest)
+[![Foundry Version](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dfor-the-badge%26name%3Dyakuza-fy%26compatibility%3D12%2C13%26url%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2FWiNG-CoMM%2Fyakuza-fy%2Fmain%2Fmodule.json)](https://foundryvtt.com/packages/yakuza-fy/)
+[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fyakuza-fy&colorB=4aa94a&style=for-the-badge)](https://forge-vtt.com/bazaar#package=yakuza-fy)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
+[![ko-fi](https://img.shields.io/badge/Support%20Me-Ko--fi-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/wingc)
+
 > *“I never thought forever could be found in fists, blood, and honor... but it was.”*  
 > — Kristi Lynn, *Forever* (If her boyfriend was a Yakuza game main character)
 
@@ -101,7 +109,7 @@ https://github.com/user-attachments/assets/44ec745c-b6cf-4701-bb9b-b6532d863d01
 ## Hotkey Support:
 
 GMs can use Alt+Y (default) to force close the overlay for all players.
-Hotkey can be configured in your Foundry VTT control setings.
+Hotkey can be configured in your Foundry VTT control settings.
 
 ## Dependencies:
 Socketlib – Required for communication between clients.
@@ -150,3 +158,11 @@ Not implemented yet, but planned for future releases.
 
 ## License:
 This project is licensed under the GNU General Public License v3.0. See the LICENSE file for more details.
+
+---
+
+## Ko-fi link if you feel like it
+
+If you enjoy using Yakuza-fy and feel that you would like to throw some extra support then consider buying me a coffee! This module is free and will always be free. No support will ever be needed. I do have a job and can afford to pay my bills fortunately. But, in any case, you can do it here if you wish:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/wingc)
