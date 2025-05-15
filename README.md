@@ -103,12 +103,12 @@ https://github.com/user-attachments/assets/44ec745c-b6cf-4701-bb9b-b6532d863d01
 GMs can use Alt+Y (default) to force close the overlay for all players.
 Hotkey can be configured in your Foundry VTT control setings.
 
-##️ Dependencies
+## Dependencies:
 Socketlib – Required for communication between clients.
 
 Optional: Table Map – For auto-forced closing on a designated observer player.
 
-### Journal Entry 
+### Journal Entry:
 
 This is the one we use internally when clicking on the buttons:
 
