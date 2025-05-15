@@ -11,6 +11,12 @@ A humble tribute to the **Yakuza / Ryu Ga Gotoku** series, where storytelling, l
 
 If you love the **Yakuza / Ryu Ga Gotoku** as much as I do, buy and play their games!
 
+## Important: Foundry V13 support
+
+We now support Foundry V13 with Yakuza-fy. However, the TableMap complement at the moment is not working in V13 as TableMap isn't updated for V13 yet. Support for V13 however implicits a small change in the header button to use Yakuza-fy in V13. As the Journal default sheet in V13 is different from V12, you will need to use the three dots button first to show the Yakuza-fy option. Some systems in V13 do not use the Journal default sheet as their default sheet, such as DnD5e, so those are unaffected by these changes.
+
+![v13 header button](https://github.com/user-attachments/assets/52ee7aca-6113-4fdb-9f80-ab45385ec69d)
+
 ## Features
 
 - Adds a **"Yakuza-fy"** button to Journal Entries for GMs.
@@ -20,6 +26,8 @@ If you love the **Yakuza / Ryu Ga Gotoku** as much as I do, buy and play their g
 - Integrates with **Table Map** to force overlay closing on the observer.
 - Optional hotkey (`Alt+Y` by default) to force-close the overlay.
 - Settings to control auto-close behavior and permissions.
+- New in 1.1.0: Support for Foundry V13.
+- New in 1.1.0: Exposed API to use Yakuza-fy in other modules.
 
 ## Installation
 
@@ -99,6 +107,38 @@ Hotkey can be configured in your Foundry VTT control setings.
 Socketlib – Required for communication between clients.
 
 Optional: Table Map – For auto-forced closing on a designated observer player.
+
+### Journal Entry 
+
+This is the one we use internally when clicking on the buttons:
+
+```javascript
+YakuzaData.createYakuzaDataFromDefaultJournal(journal);
+```
+
+### Journal Entry ID
+
+This one is simply a shortcut for the Journal Entry version, so you can use it if you already have the journal ID but do not wish to pass the whole Journal entry object:
+
+```javascript
+YakuzaData.createYakuzaDataFromDefaultJournalId(journalId);
+```
+
+### From Scratch
+
+You may define all the data on your own by using the following function:
+
+```javascript
+YakuzaData.createYakuzaData(journalId, image, title, subtitle1, subtitle2);
+```
+
+The only really mandatory data is the image and the title. journalid, subtitle1 and subtitle2 are optional.
+
+#### Do I need a Journal Entry or a journalId?
+
+Not really. The Journal Entry is used as a way for the user to entry the data for this to work. Since we are using the Journal Entry to get the data, you can use either a Journal Entry or a journalId to trigger the intro. The Journal Entry version is simply a shortcut for the journalId version, so you can use it if you already have the journal ID but do not wish to pass the whole Journal entry object.
+
+But you may opt to use the from scratch version if you do not wish to use a Journal Entry. There is no need to pass a JournalId to this version, as it is optional. The JournalId is only used to assign an observer permission to the journal entry (depending on the configuration options), so you can use it if you wish to do so.
 
 ## Localization
 Not implemented yet, but planned for future releases.
