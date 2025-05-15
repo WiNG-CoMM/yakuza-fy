@@ -108,6 +108,11 @@ Socketlib – Required for communication between clients.
 
 Optional: Table Map – For auto-forced closing on a designated observer player.
 
+## API:
+
+You can use the API to trigger the intro from other modules.
+You will need to provide a YakuzaData structure to the API in order to do so. We provide helper functions to create a YakuzaData structure from a journal entry, journal entry ID or from scratch.
+
 ### Journal Entry:
 
 This is the one we use internally when clicking on the buttons:
@@ -116,7 +121,7 @@ This is the one we use internally when clicking on the buttons:
 YakuzaData.createYakuzaDataFromDefaultJournal(journal);
 ```
 
-### Journal Entry ID
+### Journal Entry ID:
 
 This one is simply a shortcut for the Journal Entry version, so you can use it if you already have the journal ID but do not wish to pass the whole Journal entry object:
 
@@ -124,7 +129,7 @@ This one is simply a shortcut for the Journal Entry version, so you can use it i
 YakuzaData.createYakuzaDataFromDefaultJournalId(journalId);
 ```
 
-### From Scratch
+### From Scratch:
 
 You may define all the data on your own by using the following function:
 
@@ -140,8 +145,8 @@ Not really. The Journal Entry is used as a way for the user to entry the data fo
 
 But you may opt to use the from scratch version if you do not wish to use a Journal Entry. There is no need to pass a JournalId to this version, as it is optional. The JournalId is only used to assign an observer permission to the journal entry (depending on the configuration options), so you can use it if you wish to do so.
 
-## Localization
+## Localization:
 Not implemented yet, but planned for future releases.
 
-## License
+## License:
 This project is licensed under the GNU General Public License v3.0. See the LICENSE file for more details.
