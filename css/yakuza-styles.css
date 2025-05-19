@@ -19,14 +19,24 @@
     cursor: pointer;
 }
 
-.yakuza-intro-image {
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
+.yakuza-image-container {
     position: absolute;
     top: 0;
     left: 0;
-    transition: filter 1s ease; /* Add smooth filter transition */
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.yakuza-intro-image {
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: cover; /* Default, will be overridden by JS */
+    transition: filter 1s ease, transform 0.3s ease; /* Smooth transitions */
+    border: none;
 }
 
 .yakuza-intro-filtered {

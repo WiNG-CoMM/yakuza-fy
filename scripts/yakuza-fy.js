@@ -231,14 +231,48 @@ export class YakuzaIntro {
       return;
     }
 
+    // Get image adaptation settings
+    let adaptationMode = "auto";
+    let scaleFactor = 100;
+    try {
+      adaptationMode = game.settings.get(YakuzaIntro.ID, "imageAdaptationMode");
+      scaleFactor = game.settings.get(YakuzaIntro.ID, "imageScaleFactor");
+    } catch (error) {
+      console.warn("Yakuza-fy | Could not get image adaptation settings, using defaults");
+    }
+
+    // Preload the image before creating the overlay to ensure it's fully loaded
+    const preloadedImage = await YakuzaIntro.loadImage(yakuzaData.image);
+    
+    // Create overlay with image container but don't append it yet
+    // We'll hide both the overlay and the image initially
     const overlay = $(`
-      <div id="yakuza-intro-overlay" class="yakuza-intro-overlay">
-        <img src="${yakuzaData.image}" class="yakuza-intro-image">
+      <div id="yakuza-intro-overlay" class="yakuza-intro-overlay" style="opacity: 0;">
+        <div id="yakuza-image-container" class="yakuza-image-container">
+          <img src="${yakuzaData.image}" class="yakuza-intro-image" style="visibility: hidden;" data-adaptation-mode="${adaptationMode}" data-scale-factor="${scaleFactor}">
+        </div>
         ${YakuzaIntro.buildTextElements(yakuzaData.title, yakuzaData.subtitle1, yakuzaData.subtitle2)}
       </div>
     `);
-
+    
+    // Append to DOM but keep it hidden
     overlay.appendTo(document.body);
+    
+    // Get the image element
+    const img = overlay.find(".yakuza-intro-image")[0];
+    
+    // Apply adaptation immediately since we've already preloaded the image
+    YakuzaIntro.applyImageAdaptation(img, adaptationMode, scaleFactor);
+    
+    // Small delay to ensure the browser has applied the styles
+    await new Promise(resolve => setTimeout(resolve, 50));
+    
+    // Make the image visible first with scaling already applied
+    $(img).css("visibility", "visible");
+    
+    // Then make the overlay visible
+    overlay.css("opacity", "");
+    
     await YakuzaIntro.animateElements();
 
     overlay.off("click").on("click", async () => {
@@ -302,11 +336,12 @@ export class YakuzaIntro {
   }
 
   static buildTextElements(title, subtitle1, subtitle2) {
+    let textElements = `<div class="yakuza-intro-text yakuza-title">${title}</div>`;
+    if (subtitle1) textElements += `<div class="yakuza-intro-text yakuza-subtitle">${subtitle1}</div>`;
+    if (subtitle2) textElements += `<div class="yakuza-intro-text yakuza-subtitle">${subtitle2}</div>`;
     return `
       <div class="yakuza-intro-text-wrapper">
-        <div class="yakuza-intro-text yakuza-title">${title}</div>
-        <div class="yakuza-intro-text yakuza-subtitle">${subtitle1}</div>
-        <div class="yakuza-intro-text yakuza-subtitle">${subtitle2}</div>
+        ${textElements}
       </div>
     `;
   }
@@ -342,6 +377,106 @@ export class YakuzaIntro {
     });
   }
 
+  static applyImageAdaptation(img, adaptationMode, scaleFactor) {
+    // Get image dimensions
+    const imageWidth = img.naturalWidth;
+    const imageHeight = img.naturalHeight;
+    const imageRatio = imageWidth / imageHeight;
+    
+    // Get screen dimensions
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const screenRatio = screenWidth / screenHeight;
+    
+    // Determine if screen is in portrait or landscape mode
+    const isScreenPortrait = screenHeight > screenWidth;
+    
+    // Determine if image is in portrait or landscape mode
+    const isImagePortrait = imageHeight > imageWidth;
+    
+    // Normalize scale factor to ensure it's within our limits (75-125)
+    let normalizedScaleFactor = Math.max(75, Math.min(125, scaleFactor));
+    
+    // If we had to normalize, log a warning
+    if (normalizedScaleFactor !== scaleFactor) {
+      console.warn(`Yakuza-fy | Normalized scale factor from ${scaleFactor}% to ${normalizedScaleFactor}%`);
+    }
+    
+    // Apply normalized scale factor (convert from percentage to decimal)
+    const scale = normalizedScaleFactor / 100;
+    
+    // Get the image container
+    const container = $(img).parent();
+    
+    // Reset any previously applied styles
+    $(img).css({
+      'width': '',
+      'height': '',
+      'object-fit': '',
+      'transform': ''
+    });
+    
+    // Apply adaptation mode
+    let objectFit = 'cover'; // Default
+    let width = '100%';
+    let height = '100%';
+    
+    switch (adaptationMode) {
+      case 'width':
+        // Fit to width
+        objectFit = 'contain';
+        width = '100%';
+        height = 'auto';
+        break;
+        
+      case 'height':
+        // Fit to height
+        objectFit = 'contain';
+        width = 'auto';
+        height = '100%';
+        break;
+        
+      case 'contain':
+        // Show entire image
+        objectFit = 'contain';
+        break;
+        
+      case 'auto':
+      default:
+        // Auto mode - adapt based on screen and image orientation
+        if (isScreenPortrait === isImagePortrait) {
+          // Screen and image have same orientation
+          objectFit = 'cover';
+        } else {
+          // Screen and image have different orientations
+          if (isScreenPortrait) {
+            // Screen is portrait, image is landscape
+            width = '100%';
+            height = 'auto';
+          } else {
+            // Screen is landscape, image is portrait
+            width = 'auto';
+            height = '100%';
+          }
+          objectFit = 'contain';
+        }
+        break;
+    }
+    
+    // Apply the styles with scale factor
+    $(img).css({
+      'width': width,
+      'height': height,
+      'object-fit': objectFit,
+      'transform': `scale(${scale})`,
+      'transform-origin': 'center center'
+    });
+    
+    console.log(`Yakuza-fy | Applied image adaptation: mode=${adaptationMode}, scale=${scale}, ` +
+                `image=${imageWidth}x${imageHeight} (${isImagePortrait ? 'portrait' : 'landscape'}), ` +
+                `screen=${screenWidth}x${screenHeight} (${isScreenPortrait ? 'portrait' : 'landscape'})`);
+  }
+
   static registerKeybindings() {
     
     game.keybindings.register(YakuzaIntro.ID, "close-intro", {
@@ -362,6 +497,8 @@ export class YakuzaIntro {
     YakuzaIntro.registerCloseBehaviour();
     YakuzaIntro.registerGiveObserverPermission();
     YakuzaIntro.registerForceCloseTableMap();
+    YakuzaIntro.registerImageAdaptationMode();
+    YakuzaIntro.registerImageScaleFactor();
   }
 
   static registerCloseBehaviour() {
@@ -415,5 +552,38 @@ export class YakuzaIntro {
         default: false
       });
     }
+  }
+
+  static registerImageAdaptationMode() {
+    game.settings.register(YakuzaIntro.ID, "imageAdaptationMode", {
+      name: "Image Adaptation Mode",
+      hint: "How should images be displayed in the intro overlay",
+      scope: "world",
+      config: true,
+      default: "auto",
+      type: String,
+      choices: {
+        auto: "Automatic (based on image and screen orientation)",
+        width: "Fit to Width",
+        height: "Fit to Height",
+        contain: "Contain (show entire image, may have empty space)"
+      }
+    });
+  }
+
+  static registerImageScaleFactor() {
+    game.settings.register(YakuzaIntro.ID, "imageScaleFactor", {
+      name: "Image Scale Factor",
+      hint: "Scale the image size (75% to 125%)",
+      scope: "world",
+      config: true,
+      type: Number,
+      default: 100,
+      range: {
+        min: 75,
+        max: 125,
+        step: 5
+      }
+    });
   }
 }
