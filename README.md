@@ -36,6 +36,8 @@ We now support Foundry V13 with Yakuza-fy. However, the TableMap complement at t
 - Settings to control auto-close behavior and permissions.
 - New in 1.1.0: Support for Foundry V13.
 - New in 1.1.0: Exposed API to use Yakuza-fy in other modules.
+- New in 1.2.0: Localization. Spanish is now available too!
+- New in 1.2.0: Image Adaptation and Scaling options
 
 ## Installation
 
@@ -70,7 +72,7 @@ https://github.com/user-attachments/assets/df0ae561-6aba-4c10-a842-3641f947ce6c
 
 ## Settings (found in Configure Settings → Module Settings → Yakuza-fy):
 
-![Configurable options](https://github.com/user-attachments/assets/3e6c60bb-8dfc-4f5d-841a-1aff081bcc40)
+![Configurable options v1.2.0](https://github.com/user-attachments/assets/d442c678-02a9-4ae5-84c1-b59ea6c9470e)
 
 ### Intro Closing Behaviour: Ask / Always / Never.
 
@@ -105,6 +107,49 @@ when you are using a secondary screen as a table map and you do not wish to move
 table monitor in order to close it:
 
 https://github.com/user-attachments/assets/44ec745c-b6cf-4701-bb9b-b6532d863d01
+
+### Image Adaptation Mode
+
+Yakuzaf-y attempts to make sure the image is displayed in the most cinamatically impacting way, which
+might include some resizing options. Keep in mind that all image adaptation modes might show empty spaces
+around your images as, unless you prepare them specifically, they will rarely have the exact dimensions
+as your screens. Furthermore, different players might have different screen sizes and orientations which
+would make exact manual prepartions impossible altogether. These options are aimed to overcome such limitations
+while trying to fill as much screen as possible for extra cinametic flair and honor.
+
+Please, be also aware that whenever you change the size of an image over it's original it will have it's
+overall quality affected. Small images will never look good if you resize them up aggressively. This 
+module will simply resize them in the same way your browser would do, it does not repaint them based on 
+original input, neither uses AI for rescaling.
+
+![Image Adaptation Modes](https://github.com/user-attachments/assets/7f9819e8-f283-4f91-bf33-69f9f0aff9cb)
+
+#### Automatic (based on image and screen orientation)
+
+This mode makes automatic calculations to display the image as big as possible in the screen. It takes the
+original image size into consideration and the screen size/orientation to show it, including some slight oversizing
+while attempting to not cut the image excessively. Some slight cropping might be applied on the edges to provide
+a better fitting. Take into consideration however that images with transparent backgrounds might seem to be
+smaller than needed if the non-transparent part has margins around it in the image.
+
+#### Fit to width
+
+The image will be shown in a way that gives priority to width while adjusting height automatically.
+
+#### Fit to height
+
+The image will be shown in a way that gives priority to hight while adjusting width automatically.
+
+#### Contain (show entire image, may have empty space)
+
+Will ensure the whole image is shown, as big as possible, without ever cropping or oversizing out of the screen.
+
+### Image Scale Factor
+
+If your images still show too small, or too large, you may override the final size calculation and add/remove an extra
+25% more/less space. A Scale Factor of 100 indicates the image will remain at 100% of the final calculated size by the
+Image Adaptation Mode you selected. Give it a try at 105-110% and see how your images pack a bigger punch filling 
+the screen!
 
 ## Hotkey Support:
 
@@ -154,7 +199,8 @@ Not really. The Journal Entry is used as a way for the user to entry the data fo
 But you may opt to use the from scratch version if you do not wish to use a Journal Entry. There is no need to pass a JournalId to this version, as it is optional. The JournalId is only used to assign an observer permission to the journal entry (depending on the configuration options), so you can use it if you wish to do so.
 
 ## Localization:
-Not implemented yet, but planned for future releases.
+Yes! We are now supporting localization and, as of this version, offering both English and Spanish. Other languages are welcome
+if you want to contribute them!
 
 ## License:
 This project is licensed under the GNU General Public License v3.0. See the LICENSE file for more details.
