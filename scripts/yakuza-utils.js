@@ -24,7 +24,7 @@ export function localize(key, data = {}) {
   
   // If the translation is not found, return the key in a dev-friendly way
   if (result === fullKey) {
-    logWarning(`Yakuza-fy | Missing translation for key: ${key}`);
+    logWarning(`Missing translation for key: ${key}`);
     return getFallbackTranslation(key);
   }
   
@@ -67,7 +67,7 @@ function getFallbackTranslation(key) {
  */
 export function getFoundryVersion() {
   const version = game.version ? Number(game.version.split('.')[0]) : 12;
-  logDebug(`Yakuza-fy | Detected Foundry version: ${version}`);
+  logDebug(`Detected Foundry version: ${version}`);
   return version; // Default to 12.0 if not found
 }
 
@@ -79,7 +79,7 @@ export function getFoundryVersion() {
 export function isFoundryVersionAtLeast(version) {
   const current = getFoundryVersion();
   const result = current >= version;
-  logDebug(`Yakuza-fy | Checking if Foundry version ${current} is at least ${version}: ${result}`);
+  logDebug(`Checking if Foundry version ${current} is at least ${version}: ${result}`);
   return result;
 }
 
@@ -89,19 +89,19 @@ export function isFoundryVersionAtLeast(version) {
  * @returns {Promise<HTMLImageElement|null>} A promise that resolves to the loaded image or null
  */
 export function loadImage(src) {
-  logDebug(`Yakuza-fy | Loading image: ${src}`);
+  logDebug(`Loading image: ${src}`);
   return new Promise(resolve => {
     if (!src) {
-      logWarning("Yakuza-fy | No image source provided");
+      logWarning("No image source provided");
       return resolve(null);
     }
     const img = new Image();
     img.onload = () => {
-      logDebug(`Yakuza-fy | Image loaded successfully: ${src} (${img.naturalWidth}x${img.naturalHeight})`);
+      logDebug(`Image loaded successfully: ${src} (${img.naturalWidth}x${img.naturalHeight})`);
       resolve(img);
     };
     img.onerror = () => {
-      logError(`Yakuza-fy | Failed to load image: ${src}`);
+      logError(`Failed to load image: ${src}`);
       resolve(null);
     };
     img.src = src;

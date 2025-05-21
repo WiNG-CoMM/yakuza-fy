@@ -5,8 +5,8 @@
 
 import { YAKUZA_ID, localize } from './yakuza-utils.js';
 import { logInfo, logDebug, logError, logWarning } from './yakuza-logging.js';
-import { registerSettings, registerKeybindings } from './yakuza-settings.js';
-import { setupJournalButtons, setupContextMenuHook } from './yakuza-compatibility.js';
+import { registerSettings } from './yakuza-settings.js';
+import { unifiedDialog } from './yakuza-compatibility.js';
 import { showIntro, closeIntro } from './yakuza-ui.js';
 import { createYakuzaDataFromDefaultJournal } from './yakuza-data.js';
 
@@ -110,23 +110,23 @@ async function handleGMClick() {
 
   if (closeBehavior === "ask") {
     logDebug("Showing close confirmation dialog");
-    new Dialog({
-      title: localize("Settings.CloseDialog.Title"),
-      content: localize("Settings.CloseDialog.Content"),
-      buttons: {
-        yes: {
-          label: localize("Settings.CloseDialog.Yes"),
-          callback: () => {
-            logDebug("Dialog: Yes clicked, closing for all players");
-            socket.executeForEveryone("closeIntro");
-          }
-        },
-        no: { 
-          label: localize("Settings.CloseDialog.No"),
-          callback: () => logDebug("Dialog: No clicked, not closing for others")
-        }
+    const buttons = [{
+      action: "yes",
+      label: localize("Settings.CloseDialog.Yes"),
+      callback: () => {
+        logDebug("Dialog: Yes clicked, closing for all players");
+        socket.executeForEveryone("closeIntro");
       }
-    }).render(true);
+    }, 
+    {
+      action: "no",
+      label: localize("Settings.CloseDialog.No"),
+      default: true,
+      callback: () => logDebug("Dialog: No clicked, not closing for others")
+    }]
+    unifiedDialog(
+      localize("Settings.CloseDialog.Title"),
+      localize("Settings.CloseDialog.Content"), buttons, "no");
   } else if (closeBehavior === "always") {
     logDebug("Auto-closing for all players (closeBehavior=always)");
     socket.executeForEveryone("closeIntro");

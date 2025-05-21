@@ -10,7 +10,7 @@ import { logDebug, logError, logWarning } from './yakuza-logging.js';
  * Setup journal buttons based on Foundry version
  */
 export function setupJournalButtons() {
-  logDebug("Yakuza-fy | Setting up journal buttons");
+  logDebug("Setting up journal buttons");
   // Setup for v12 (and compatible sheets in v13)
   setupJournalButtons_v12();
   
@@ -18,14 +18,14 @@ export function setupJournalButtons() {
   if (isFoundryVersionAtLeast(13)) {
     setupJournalButtons_v13();
   }
-  logDebug("Yakuza-fy | Journal buttons setup complete");
+  logDebug("Journal buttons setup complete");
 }
 
 /**
  * Setup journal buttons for Foundry v12
  */
 function setupJournalButtons_v12() {
-  logDebug("Yakuza-fy | Setting up journal buttons for v12");
+  logDebug("Setting up journal buttons for v12");
   Hooks.on("getJournalSheetHeaderButtons", (sheet, buttons) => {
     if (!game.user.isGM) return;
     buttons.unshift({
@@ -33,11 +33,11 @@ function setupJournalButtons_v12() {
       class: "yakuza-intro-button",
       icon: "fas fa-bomb",
       onclick: () => {
-        logDebug("Yakuza-fy | v12 journal button clicked", sheet.object.id);
+        logDebug("v12 journal button clicked", sheet.object.id);
         if (window.YakuzaFy && window.YakuzaFy.triggerIntroFromJournal) {
           window.YakuzaFy.triggerIntroFromJournal(sheet.object.id);
         } else {
-          logError("Yakuza-fy | Global API not available");
+          logError("Global API not available");
           ui.notifications.error(localize("Notifications.ApiNotAvailable"));
         }
       }
@@ -49,13 +49,13 @@ function setupJournalButtons_v12() {
  * Setup journal buttons for Foundry v13
  */
 function setupJournalButtons_v13() {
-  logDebug("Yakuza-fy | Setting up journal buttons for v13");
+  logDebug("Setting up journal buttons for v13");
   
   Hooks.on("getHeaderControlsJournalEntrySheet", (app, controls) => {
-    logDebug("Yakuza-fy | Adding header button to JournalEntrySheet", app);
-    logDebug("Yakuza-fy | app keys:", Object.keys(app));
-    logDebug("Yakuza-fy | app.document:", app.document);
-    logDebug("Yakuza-fy | app.object:", app.object);
+    logDebug("Adding header button to JournalEntrySheet", app);
+    logDebug("app keys:", Object.keys(app));
+    logDebug("app.document:", app.document);
+    logDebug("app.object:", app.object);
     
     if (!game.user.isGM) return;
     
@@ -64,52 +64,52 @@ function setupJournalButtons_v13() {
       class: "yakuza-intro-button",
       icon: "fas fa-bomb",
       onClick: () => {
-        logDebug("Yakuza-fy | v13 journal button clicked");
-        logDebug("Yakuza-fy | Header button clicked for v13");
-        logDebug("Yakuza-fy | App in onclick:", app);
+        logDebug("v13 journal button clicked");
+        logDebug("Header button clicked for v13");
+        logDebug("App in onclick:", app);
         
-        // Intentar varias formas de obtener el ID
+        // Attempt several ways to obtain Id
         let journalId = null;
         
         if (app.document && app.document.id) {
           journalId = app.document.id;
-          logDebug("Yakuza-fy | Found ID via app.document.id:", journalId);
+          logDebug("Found ID via app.document.id:", journalId);
         } else if (app.object && app.object.id) {
           journalId = app.object.id;
-          logDebug("Yakuza-fy | Found ID via app.object.id:", journalId);
+          logDebug("Found ID via app.object.id:", journalId);
         } else if (app.id) {
           journalId = app.id;
-          logDebug("Yakuza-fy | Found ID via app.id:", journalId);
+          logDebug("Found ID via app.id:", journalId);
         } else if (app._id) {
           journalId = app._id;
-          logDebug("Yakuza-fy | Found ID via app._id:", journalId);
+          logDebug("Found ID via app._id:", journalId);
         } else if (app.options && app.options.journalId) {
           journalId = app.options.journalId;
-          logDebug("Yakuza-fy | Found ID via app.options.journalId:", journalId);
+          logDebug("Found ID via app.options.journalId:", journalId);
         } else if (app.options && app.options.pageId) {
-          // Obtener el journalId desde el pageId
+          // Get journalId from pageId
           const pageId = app.options.pageId;
-          logDebug("Yakuza-fy | Found pageId:", pageId);
-          // Buscar journal que contiene esta página
+          logDebug("Found pageId:", pageId);
+          // Search for journal containing this page
           for (const journal of game.journal) {
             if (journal.pages && journal.pages.has(pageId)) {
               journalId = journal.id;
-              logDebug("Yakuza-fy | Found journal ID from page:", journalId);
+              logDebug("Found journal ID from page:", journalId);
               break;
             }
           }
         }
         
         if (journalId) {
-          logDebug("Yakuza-fy | Triggering intro from journal ID:", journalId);
+          logDebug("Triggering intro from journal ID:", journalId);
           if (window.YakuzaFy && window.YakuzaFy.triggerIntroFromJournal) {
             window.YakuzaFy.triggerIntroFromJournal(journalId);
           } else {
-            logError("Yakuza-fy | Global API not available");
+            logError("Global API not available");
             ui.notifications.error(localize("Notifications.ApiNotAvailable"));
           }
         } else {
-          logError("Yakuza-fy | Could not determine Journal ID");
+          logError("Could not determine Journal ID");
           ui.notifications.error(localize("Notifications.NoJournalId"));
         }
       }
@@ -122,15 +122,16 @@ function setupJournalButtons_v13() {
  * @param {Function} triggerIntroFromJournal - Function to trigger intro from journal
  */
 export function setupContextMenuHook() {
-  logDebug("Yakuza-fy | Setting up context menu hooks");
-  // Setup for v12
-  setupContextMenuHook_v12();
+  logDebug("Setting up context menu hooks");
   
   // Setup for v13 if running on v13+
   if (isFoundryVersionAtLeast(13)) {
     setupContextMenuHook_v13();
+  } else {
+    // Setup for v12
+    setupContextMenuHook_v12(); 
   }
-  logDebug("Yakuza-fy | Context menu hooks setup complete");
+  logDebug("Context menu hooks setup complete");
 }
 
 /**
@@ -138,7 +139,7 @@ export function setupContextMenuHook() {
  * @param {Function} triggerIntroFromJournal - Function to trigger intro from journal
  */
 function setupContextMenuHook_v12() {
-  logDebug("Yakuza-fy | Setting up context menu for v12");
+  logDebug("Setting up context menu for v12");
   Hooks.on("getJournalDirectoryEntryContext", (html, options) => {
     if (!game.user.isGM) return;
     
@@ -151,11 +152,11 @@ function setupContextMenuHook_v12() {
       },
       callback: li => {
         const id = li.data("documentId") || li.data("entryId");
-        logDebug("Yakuza-fy | v12 context menu triggered for journal ID:", id);
+        logDebug("v12 context menu triggered for journal ID:", id);
         if (window.YakuzaFy && window.YakuzaFy.triggerIntroFromJournal) {
           window.YakuzaFy.triggerIntroFromJournal(id);
         } else {
-          logError("Yakuza-fy | Global API not available");
+          logError("Global API not available");
           ui.notifications.error(localize("Notifications.ApiNotAvailable"));
         }
       }
@@ -168,27 +169,93 @@ function setupContextMenuHook_v12() {
  * @param {Function} triggerIntroFromJournal - Function to trigger intro from journal
  */
 function setupContextMenuHook_v13() {
-  logDebug("Yakuza-fy | Setting up context menu for v13");
-  Hooks.on("getJournalEntryDirectoryEntryContext", (html, options) => {
+  logDebug("Setting up context menu for v13");
+  Hooks.on("getJournalEntryContextOptions", (application, menuItems) => {
     if (!game.user.isGM) return;
     
-    options.push({
+    menuItems.push({
       name: localize("Button.Label"),
       icon: '<i class="fas fa-bomb"></i>',
-      condition: li => {
-        const id = li.data("documentId") || li.data("entryId") || li.data("document-id") || li.data("entry-id");
-        return !!id;
-      },
-      callback: li => {
-        const id = li.data("documentId") || li.data("entryId") || li.data("document-id") || li.data("entry-id");
-        logDebug("Yakuza-fy | v13 context menu triggered for journal ID:", id);
+      callback: (li) => {
+        logDebug("Context menu clicked for journal: ", li);
+        // In Foundry v13, the attribute has changed from documentId to entryId
+        const id = li.dataset.entryId || li.dataset.documentId;
+        logDebug("v13 context menu triggered for journal ID:", id);
         if (window.YakuzaFy && window.YakuzaFy.triggerIntroFromJournal) {
           window.YakuzaFy.triggerIntroFromJournal(id);
         } else {
-          logError("Yakuza-fy | Global API not available");
+          logError("Global API not available");
           ui.notifications.error(localize("Notifications.ApiNotAvailable"));
         }
       }
     });
   });
+}
+
+/**
+ * Unified Dialog for Foundry v12 and v13
+ */
+export function unifiedDialog(title, content, buttons, defaultButton) {
+  logDebug("Showing dialog for v12/v13");
+  if (isFoundryVersionAtLeast(13)) {
+    return dialog_V13(title, content, buttons);
+  } else {
+    return dialog_V12(title, content, buttons, defaultButton);
+  }
+}
+
+/**
+ * Old Dialog for Foundry v12
+ */
+function dialog_V12(title, content, buttons, defaultButton) {
+  logDebug("Showing dialog for v12");
+  logDebug("Title:", title);
+  logDebug("Content:", content);
+  logDebug("Buttons:", buttons);
+  logDebug("Default Button:", defaultButton);
+
+  const transformedButtons = transformButtonsIntoV2(buttons);
+
+  logDebug("Transformed Buttons:", transformedButtons);
+  return new Dialog({
+        title: title,
+        content: content,
+        buttons: transformedButtons,
+        default: defaultButton
+      }).render(true);
+}
+
+/**
+ * New Dialog for Foundry v13
+ */
+function dialog_V13(title, content, buttons) {
+  logDebug("Showing dialog for v13");
+  logDebug("Title:", title);
+  logDebug("Content:", content);
+  logDebug("Buttons:", buttons);
+
+  // Wrap buttons in a config object as required by DialogV2
+  return new foundry.applications.api.DialogV2({
+    window: { title: title },
+    content: content,
+    buttons: buttons
+  }).render(true);
+}
+
+function transformButtonsIntoV2(buttonArray) {
+  const buttonObj = {};
+
+  for (const btn of buttonArray) {
+    if (!btn.action || !btn.label || typeof btn.callback !== "function") {
+      console.warn("Skipping invalid button:", btn);
+      continue;
+    }
+
+    buttonObj[btn.action] = {
+      label: btn.label,
+      callback: btn.callback
+    };
+  }
+
+  return buttonObj;
 }

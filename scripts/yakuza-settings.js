@@ -10,20 +10,20 @@ import { logInfo, logDebug, logError, logWarning } from './yakuza-logging.js';
  * Register all module settings
  */
 export function registerSettings() {
-  logDebug("Yakuza-fy | Registering all settings");
+  logDebug("Registering all settings");
   registerCloseBehaviour();
   registerGiveObserverPermission();
   registerForceCloseTableMap();
   registerImageAdaptationMode();
   registerImageScaleFactor();
-  logDebug("Yakuza-fy | All settings registered");
+  logDebug("All settings registered");
 }
 
 /**
  * Register the close behavior setting
  */
 export function registerCloseBehaviour() {
-  logDebug("Yakuza-fy | Registering close behavior setting");
+  logDebug("Registering close behavior setting");
   game.settings.register(YAKUZA_ID, "closeBehavior", {
     name: localize("Settings.CloseBehavior.Name"),
     hint: localize("Settings.CloseBehavior.Hint"),
@@ -43,7 +43,7 @@ export function registerCloseBehaviour() {
  * Register the observer permission setting
  */
 export function registerGiveObserverPermission() {
-  logDebug("Yakuza-fy | Registering observer permission setting");
+  logDebug("Registering observer permission setting");
   game.settings.register(YAKUZA_ID, "giveObserverPermission", {
     name: localize("Settings.GiveObserverPermission.Name"),
     hint: localize("Settings.GiveObserverPermission.Hint"),
@@ -58,7 +58,7 @@ export function registerGiveObserverPermission() {
  * Register the table map force close setting
  */
 export function registerForceCloseTableMap() {
-  logDebug("Yakuza-fy | Checking for table-map module");
+  logDebug("Checking for table-map module");
   // Only needed if integrating with TableMap and already configured
   const hasTableMap = game.modules.get("table-map")?.active;
   let tableMapUserIdExists = false;
@@ -68,12 +68,12 @@ export function registerForceCloseTableMap() {
       game.settings.get("table-map", "userId");
       tableMapUserIdExists = true;
     } catch (error) {
-      logWarning("Yakuza-fy | The 'table-map' module is active but 'userId' setting is not registered yet");
+      logWarning("The 'table-map' module is active but 'userId' setting is not registered yet");
     }
   }
   
   if (hasTableMap && tableMapUserIdExists) {
-    logDebug("Yakuza-fy | Registering force close table map setting");
+    logDebug("Registering force close table map setting");
     game.settings.register(YAKUZA_ID, "forceCloseTableMap", {
       name: localize("Settings.ForceCloseTableMap.Name"),
       hint: localize("Settings.ForceCloseTableMap.Hint"),
@@ -89,7 +89,7 @@ export function registerForceCloseTableMap() {
  * Register the image adaptation mode setting
  */
 export function registerImageAdaptationMode() {
-  logDebug("Yakuza-fy | Registering image adaptation mode setting");
+  logDebug("Registering image adaptation mode setting");
   game.settings.register(YAKUZA_ID, "imageAdaptationMode", {
     name: localize("Settings.ImageAdaptationMode.Name"),
     hint: localize("Settings.ImageAdaptationMode.Hint"),
@@ -110,7 +110,7 @@ export function registerImageAdaptationMode() {
  * Register the image scale factor setting
  */
 export function registerImageScaleFactor() {
-  logDebug("Yakuza-fy | Registering image scale factor setting");
+  logDebug("Registering image scale factor setting");
   game.settings.register(YAKUZA_ID, "imageScaleFactor", {
     name: localize("Settings.ImageScaleFactor.Name"),
     hint: localize("Settings.ImageScaleFactor.Hint"),
@@ -130,18 +130,18 @@ export function registerImageScaleFactor() {
  * Register keybindings for the module
  */
 export function registerKeybindings() {
-  logDebug("Yakuza-fy | Registering keybindings");
+  logDebug("Registering keybindings");
   game.keybindings.register(YAKUZA_ID, "close-intro", {
     name: localize("Keybindings.CloseIntro.Name"),
     hint: localize("Keybindings.CloseIntro.Hint"),
     editable: [{ key: "KeyY", modifiers: ["Alt"] }],
     restricted: true,
     onDown: () => {
-      logDebug("Yakuza-fy | Keybinding triggered");
+      logDebug("Keybinding triggered");
       if (game.user.isGM) {
         // This will be connected in the core module
         if (window.YakuzaFy && window.YakuzaFy.closeIntroForAll) {
-          logDebug("Yakuza-fy | Executing closeIntroForAll via keybinding");
+          logDebug("Executing closeIntroForAll via keybinding");
           window.YakuzaFy.closeIntroForAll();
         }
       }
