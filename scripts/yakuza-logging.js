@@ -4,7 +4,9 @@
  */
 
 // Set to true to enable debug logging, false for production
-export const DEBUG_MODE = true;
+export const DEBUG_MODE = false;
+// Override level with INFO for debug and avoid having to set the browser to verbose logs
+export const OVERRIDE_INFO = false;
 
 /**
  * Log levels
@@ -21,7 +23,23 @@ export const LOG_LEVEL = {
 
 // Current log level - determined by DEBUG_MODE
 const currentLogLevel = DEBUG_MODE ? LOG_LEVEL.ALL : LOG_LEVEL.INFO;
-console.log(`Yakuza-fy | Logger initialized with DEBUG_MODE=${DEBUG_MODE}, currentLogLevel=${currentLogLevel}`);
+
+// Helper function to get level name
+function getLevelName(level) {
+  switch (level) {
+    case LOG_LEVEL.ERROR: return "ERROR";
+    case LOG_LEVEL.WARN:  return "WARN";
+    case LOG_LEVEL.INFO:  return "INFO";
+    case LOG_LEVEL.DEBUG: return "DEBUG";
+    case LOG_LEVEL.ALL:   return "TRACE";
+    default:              return `UNKNOWN(${level})`;
+  }
+}
+
+// Log module initialization
+Hooks.once('init', () => {
+  logDebug(`Logger initialized with DEBUG_MODE=${DEBUG_MODE}, logLevel=${currentLogLevel} (${getLevelName(currentLogLevel)})`);
+});
 /**
  * Log a message if the current log level allows it
  * @param {LOG_LEVEL} level - The log level of this message
@@ -30,15 +48,7 @@ console.log(`Yakuza-fy | Logger initialized with DEBUG_MODE=${DEBUG_MODE}, curre
  */
 export function log(level, message, ...args) {
   if (level <= currentLogLevel) {
-    let levelName;
-    switch (level) {
-      case LOG_LEVEL.ERROR: levelName = "ERROR"; break;
-      case LOG_LEVEL.WARN: levelName = "WARN"; break;
-      case LOG_LEVEL.DEBUG: levelName = "DEBUG"; break;
-      case LOG_LEVEL.ALL: levelName = "TRACE"; break;
-      case LOG_LEVEL.INFO: default: levelName = "INFO"; break;
-    }
-    
+    const levelName = getLevelName(level);
     const prefix = `Yakuza-fy | [${levelName}] | `;
     
     switch (level) {
@@ -49,8 +59,18 @@ export function log(level, message, ...args) {
         console.warn(prefix + message, ...args);
         break;
       case LOG_LEVEL.DEBUG:
+        if (OVERRIDE_INFO && DEBUG_MODE) {
+          console.info(prefix + message, ...args);
+        } else {
+          console.debug(prefix + message, ...args);
+        }
+        break;
       case LOG_LEVEL.ALL:
-        console.debug(prefix + message, ...args);
+        if (OVERRIDE_INFO && DEBUG_MODE) {
+          console.info(prefix + message, ...args);
+        } else {
+          console.trace(prefix + message, ...args);
+        }
         break;
       case LOG_LEVEL.INFO:
       default:
