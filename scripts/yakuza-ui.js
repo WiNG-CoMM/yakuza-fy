@@ -3,7 +3,8 @@
  * Contains functions related to UI rendering and animations
  */
 
-import { loadImage } from './yakuza-utils.js';
+import { loadImage, localize } from './yakuza-utils.js';
+import { logInfo, logDebug, logError, logWarning } from './yakuza-logging.js';
 
 /**
  * Build the text elements for the intro overlay
@@ -13,7 +14,7 @@ import { loadImage } from './yakuza-utils.js';
  * @returns {string} HTML string for the text elements
  */
 export function buildTextElements(title, subtitle1, subtitle2) {
-  console.log(`Yakuza-fy | Building text elements: title="${title}", subtitle1="${subtitle1}", subtitle2="${subtitle2}"`);
+  logDebug(`Yakuza-fy | Building text elements: title="${title}", subtitle1="${subtitle1}", subtitle2="${subtitle2}"`);
   return `
     <div class="yakuza-intro-text-wrapper">
       <div class="yakuza-intro-text yakuza-title">${title}</div>
@@ -28,30 +29,30 @@ export function buildTextElements(title, subtitle1, subtitle2) {
  * @returns {Promise<void>} Promise that resolves when animation is complete
  */
 export async function animateElements() {
-  console.log("Yakuza-fy | Starting animation sequence");
+  logDebug("Yakuza-fy | Starting animation sequence");
   let skip = false;
   const overlay = $("#yakuza-intro-overlay");
   const image = overlay.find(".yakuza-intro-image");
 
   overlay.one("click", () => {
-    console.log("Yakuza-fy | Animation skipped by user click");
+    logDebug("Yakuza-fy | Animation skipped by user click");
     skip = true;
     $(".yakuza-title, .yakuza-subtitle").stop(true, true).show();
     image.addClass("yakuza-intro-filtered");
   });
 
   await new Promise(r => setTimeout(r, skip ? 0 : 300));
-  console.log("Yakuza-fy | Adding filtered effect to image");
+  logDebug("Yakuza-fy | Adding filtered effect to image");
   image.addClass("yakuza-intro-filtered");
 
-  console.log("Yakuza-fy | Showing title");
+  logDebug("Yakuza-fy | Showing title");
   $(".yakuza-title").addClass("show");
   await new Promise(r => setTimeout(r, skip ? 0 : 1000));
-  console.log("Yakuza-fy | Showing subtitles");
+  logDebug("Yakuza-fy | Showing subtitles");
   $(".yakuza-subtitle").each((i, el) => {
     $(el).delay(skip ? 0 : 300 * i).addClass("show");
   });
-  console.log("Yakuza-fy | Animation sequence complete");
+  logDebug("Yakuza-fy | Animation sequence complete");
 }
 
 /**
@@ -61,7 +62,7 @@ export async function animateElements() {
  * @param {number} scaleFactor - The scale factor (75-125)
  */
 export function applyImageAdaptation(img, adaptationMode, scaleFactor) {
-  console.log(`Yakuza-fy | Applying image adaptation: mode=${adaptationMode}, scaleFactor=${scaleFactor}`);
+  logDebug(`Yakuza-fy | Applying image adaptation: mode=${adaptationMode}, scaleFactor=${scaleFactor}`);
   // Get image dimensions
   const imageWidth = img.naturalWidth;
   const imageHeight = img.naturalHeight;
@@ -83,7 +84,7 @@ export function applyImageAdaptation(img, adaptationMode, scaleFactor) {
   
   // If we had to normalize, log a warning
   if (normalizedScaleFactor !== scaleFactor) {
-    console.warn(`Yakuza-fy | Normalized scale factor from ${scaleFactor}% to ${normalizedScaleFactor}%`);
+    logWarning(`Yakuza-fy | Normalized scale factor from ${scaleFactor}% to ${normalizedScaleFactor}%`);
   }
   
   // Apply normalized scale factor (convert from percentage to decimal)
@@ -156,7 +157,7 @@ export function applyImageAdaptation(img, adaptationMode, scaleFactor) {
     'transform-origin': 'center center'
   });
   
-  console.log(`Yakuza-fy | Applied image adaptation: mode=${adaptationMode}, scale=${scale}, ` +
+  logDebug(`Yakuza-fy | Applied image adaptation: mode=${adaptationMode}, scale=${scale}, ` +
               `image=${imageWidth}x${imageHeight} (${isImagePortrait ? 'portrait' : 'landscape'}), ` +
               `screen=${screenWidth}x${screenHeight} (${isScreenPortrait ? 'portrait' : 'landscape'})`);
 }
@@ -165,9 +166,9 @@ export function applyImageAdaptation(img, adaptationMode, scaleFactor) {
  * Close the intro overlay
  */
 export function closeIntro() {
-  console.log("Yakuza-fy | Closing intro overlay");
+  logDebug("Yakuza-fy | Closing intro overlay");
   $("#yakuza-intro-overlay").stop(true).fadeOut(500, function () {
-    console.log("Yakuza-fy | Intro overlay removed from DOM");
+    logDebug("Yakuza-fy | Intro overlay removed from DOM");
     $(this).remove();
   });
 }
@@ -179,12 +180,12 @@ export function closeIntro() {
  * @returns {Promise<void>} Promise that resolves when intro is shown
  */
 export async function showIntro(yakuzaData, onGMClick) {
-  console.log("Yakuza-fy | Showing intro with data:", yakuzaData);
+  logDebug("Yakuza-fy | Showing intro with data:", yakuzaData);
   $("#yakuza-intro-overlay").remove();
 
   if (!yakuzaData.image) {
-    console.error("Yakuza-fy | No image provided in yakuzaData");
-    ui.notifications.error("Must contain an image.");
+    logError("Yakuza-fy | No image provided in yakuzaData");
+    ui.notifications.error(localize("Notifications.NoImage"));
     return;
   }
 
@@ -192,21 +193,21 @@ export async function showIntro(yakuzaData, onGMClick) {
   let adaptationMode = "auto";
   let scaleFactor = 100;
   try {
-    console.log("Yakuza-fy | Getting image adaptation settings");
+    logDebug("Yakuza-fy | Getting image adaptation settings");
     adaptationMode = game.settings.get("yakuza-fy", "imageAdaptationMode");
     scaleFactor = game.settings.get("yakuza-fy", "imageScaleFactor");
-    console.log(`Yakuza-fy | Retrieved settings: mode=${adaptationMode}, scale=${scaleFactor}`);
+    logDebug(`Yakuza-fy | Retrieved settings: mode=${adaptationMode}, scale=${scaleFactor}`);
   } catch (error) {
-    console.warn("Yakuza-fy | Could not get image adaptation settings, using defaults", error);
+    logWarning("Yakuza-fy | Could not get image adaptation settings, using defaults", error);
   }
 
   // Preload the image before creating the overlay to ensure it's fully loaded
-  console.log("Yakuza-fy | Preloading image");
+  logDebug("Yakuza-fy | Preloading image");
   const preloadedImage = await loadImage(yakuzaData.image);
   
   // Create overlay with image container but don't append it yet
   // We'll hide both the overlay and the image initially
-  console.log("Yakuza-fy | Creating overlay DOM structure");
+  logDebug("Yakuza-fy | Creating overlay DOM structure");
   const overlay = $(`
     <div id="yakuza-intro-overlay" class="yakuza-intro-overlay" style="opacity: 0;">
       <div id="yakuza-image-container" class="yakuza-image-container">
@@ -217,45 +218,45 @@ export async function showIntro(yakuzaData, onGMClick) {
   `);
   
   // Append to DOM but keep it hidden
-  console.log("Yakuza-fy | Appending overlay to document body (still hidden)");
+  logDebug("Yakuza-fy | Appending overlay to document body (still hidden)");
   overlay.appendTo(document.body);
   
   // Get the image element
   const img = overlay.find(".yakuza-intro-image")[0];
   
   // Apply adaptation immediately since we've already preloaded the image
-  console.log("Yakuza-fy | Applying image adaptation");
+  logDebug("Yakuza-fy | Applying image adaptation");
   applyImageAdaptation(img, adaptationMode, scaleFactor);
   
   // Small delay to ensure the browser has applied the styles
-  console.log("Yakuza-fy | Waiting for browser to apply styles");
+  logDebug("Yakuza-fy | Waiting for browser to apply styles");
   await new Promise(resolve => setTimeout(resolve, 50));
   
   // Make the image visible first with scaling already applied
-  console.log("Yakuza-fy | Making image visible");
+  logDebug("Yakuza-fy | Making image visible");
   $(img).css("visibility", "visible");
   
   // Then make the overlay visible
-  console.log("Yakuza-fy | Making overlay visible");
+  logDebug("Yakuza-fy | Making overlay visible");
   overlay.css("opacity", "");
   
   await animateElements();
 
   overlay.off("click").on("click", async () => {
-    console.log("Yakuza-fy | Overlay clicked by user: " + (game.user.isGM ? "GM" : "Player"));
+    logDebug("Yakuza-fy | Overlay clicked by user: " + (game.user.isGM ? "GM" : "Player"));
     if (game.user.isGM) {
-      console.log("Yakuza-fy | GM clicked - removing overlay");
+      logDebug("Yakuza-fy | GM clicked - removing overlay");
       overlay.remove();
       
       // Call the provided GM click handler
       if (onGMClick) {
-        console.log("Yakuza-fy | Calling GM click handler");
+        logDebug("Yakuza-fy | Calling GM click handler");
         onGMClick();
       }
     } else {
-      console.log("Yakuza-fy | Player clicked - closing intro");
+      logDebug("Yakuza-fy | Player clicked - closing intro");
       closeIntro();
     }
   });
-  console.log("Yakuza-fy | Intro display setup complete");
+  logDebug("Yakuza-fy | Intro display setup complete");
 }

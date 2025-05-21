@@ -3,37 +3,38 @@
  * Contains all settings registration and management
  */
 
-import { YAKUZA_ID } from './yakuza-utils.js';
+import { YAKUZA_ID, localize } from './yakuza-utils.js';
+import { logInfo, logDebug, logError, logWarning } from './yakuza-logging.js';
 
 /**
  * Register all module settings
  */
 export function registerSettings() {
-  console.log("Yakuza-fy | Registering all settings");
+  logDebug("Yakuza-fy | Registering all settings");
   registerCloseBehaviour();
   registerGiveObserverPermission();
   registerForceCloseTableMap();
   registerImageAdaptationMode();
   registerImageScaleFactor();
-  console.log("Yakuza-fy | All settings registered");
+  logDebug("Yakuza-fy | All settings registered");
 }
 
 /**
  * Register the close behavior setting
  */
 export function registerCloseBehaviour() {
-  console.log("Yakuza-fy | Registering close behavior setting");
+  logDebug("Yakuza-fy | Registering close behavior setting");
   game.settings.register(YAKUZA_ID, "closeBehavior", {
-    name: "Intro closing behavior",
-    hint: "When GM clicks, what should happen for other users?",
+    name: localize("Settings.CloseBehavior.Name"),
+    hint: localize("Settings.CloseBehavior.Hint"),
     scope: "world",
     config: true,
     default: "ask",
     type: String,
     choices: {
-      ask: "Ask every time",
-      always: "Always close",
-      never: "Never close"
+      ask: localize("Settings.CloseBehavior.Choices.ask"),
+      always: localize("Settings.CloseBehavior.Choices.always"),
+      never: localize("Settings.CloseBehavior.Choices.never")
     }
   });
 }
@@ -42,10 +43,10 @@ export function registerCloseBehaviour() {
  * Register the observer permission setting
  */
 export function registerGiveObserverPermission() {
-  console.log("Yakuza-fy | Registering observer permission setting");
+  logDebug("Yakuza-fy | Registering observer permission setting");
   game.settings.register(YAKUZA_ID, "giveObserverPermission", {
-    name: "Give Observer Permission",
-    hint: "Grant all players observer access automatically",
+    name: localize("Settings.GiveObserverPermission.Name"),
+    hint: localize("Settings.GiveObserverPermission.Hint"),
     scope: "world",
     config: true,
     type: Boolean,
@@ -57,7 +58,7 @@ export function registerGiveObserverPermission() {
  * Register the table map force close setting
  */
 export function registerForceCloseTableMap() {
-  console.log("Yakuza-fy | Checking for table-map module");
+  logDebug("Yakuza-fy | Checking for table-map module");
   // Only needed if integrating with TableMap and already configured
   const hasTableMap = game.modules.get("table-map")?.active;
   let tableMapUserIdExists = false;
@@ -67,15 +68,15 @@ export function registerForceCloseTableMap() {
       game.settings.get("table-map", "userId");
       tableMapUserIdExists = true;
     } catch (error) {
-      console.warn("Yakuza-fy | The 'table-map' module is active but 'userId' setting is not registered yet");
+      logWarning("Yakuza-fy | The 'table-map' module is active but 'userId' setting is not registered yet");
     }
   }
   
   if (hasTableMap && tableMapUserIdExists) {
-    console.log("Yakuza-fy | Registering force close table map setting");
+    logDebug("Yakuza-fy | Registering force close table map setting");
     game.settings.register(YAKUZA_ID, "forceCloseTableMap", {
-      name: "Force close for Table Map user",
-      hint: "Always close the overlay for the Table Map user regardless of settings",
+      name: localize("Settings.ForceCloseTableMap.Name"),
+      hint: localize("Settings.ForceCloseTableMap.Hint"),
       scope: "world",
       config: true,
       type: Boolean,
@@ -88,19 +89,19 @@ export function registerForceCloseTableMap() {
  * Register the image adaptation mode setting
  */
 export function registerImageAdaptationMode() {
-  console.log("Yakuza-fy | Registering image adaptation mode setting");
+  logDebug("Yakuza-fy | Registering image adaptation mode setting");
   game.settings.register(YAKUZA_ID, "imageAdaptationMode", {
-    name: "Image Adaptation Mode",
-    hint: "How should images be displayed in the intro overlay",
+    name: localize("Settings.ImageAdaptationMode.Name"),
+    hint: localize("Settings.ImageAdaptationMode.Hint"),
     scope: "world",
     config: true,
     default: "auto",
     type: String,
     choices: {
-      auto: "Automatic (based on image and screen orientation)",
-      width: "Fit to Width",
-      height: "Fit to Height",
-      contain: "Contain (show entire image, may have empty space)"
+      auto: localize("Settings.ImageAdaptationMode.Choices.auto"),
+      width: localize("Settings.ImageAdaptationMode.Choices.width"),
+      height: localize("Settings.ImageAdaptationMode.Choices.height"),
+      contain: localize("Settings.ImageAdaptationMode.Choices.contain")
     }
   });
 }
@@ -109,10 +110,10 @@ export function registerImageAdaptationMode() {
  * Register the image scale factor setting
  */
 export function registerImageScaleFactor() {
-  console.log("Yakuza-fy | Registering image scale factor setting");
+  logDebug("Yakuza-fy | Registering image scale factor setting");
   game.settings.register(YAKUZA_ID, "imageScaleFactor", {
-    name: "Image Scale Factor",
-    hint: "Scale the image size (75% to 125%)",
+    name: localize("Settings.ImageScaleFactor.Name"),
+    hint: localize("Settings.ImageScaleFactor.Hint"),
     scope: "world",
     config: true,
     type: Number,
@@ -129,22 +130,22 @@ export function registerImageScaleFactor() {
  * Register keybindings for the module
  */
 export function registerKeybindings() {
-  console.log("Yakuza-fy | Registering keybindings");
+  logDebug("Yakuza-fy | Registering keybindings");
   game.keybindings.register(YAKUZA_ID, "close-intro", {
-    name: "Close Yakuza Overlay",
-    hint: "Hotkey to close Yakuza overlay for all players",
+    name: localize("Keybindings.CloseIntro.Name"),
+    hint: localize("Keybindings.CloseIntro.Hint"),
     editable: [{ key: "KeyY", modifiers: ["Alt"] }],
     restricted: true,
     onDown: () => {
-      console.log("Yakuza-fy | Keybinding triggered");
+      logDebug("Yakuza-fy | Keybinding triggered");
       if (game.user.isGM) {
         // This will be connected in the core module
         if (window.YakuzaFy && window.YakuzaFy.closeIntroForAll) {
-          console.log("Yakuza-fy | Executing closeIntroForAll via keybinding");
+          logDebug("Yakuza-fy | Executing closeIntroForAll via keybinding");
           window.YakuzaFy.closeIntroForAll();
         }
       }
     },
-    category: "Yakuza-fy"
+    category: localize("Name")
   });
 }

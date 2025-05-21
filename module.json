@@ -21,6 +21,18 @@
   "esmodules": ["scripts/yakuza-entry.js"],
   "styles": ["css/yakuza-styles.css"],
   "socket": true,
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "es",
+      "name": "Spanish",
+      "path": "lang/es.json"
+    }
+  ],
   "relationships": {
     "requires": [
       {

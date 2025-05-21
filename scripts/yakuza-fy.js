@@ -20,7 +20,7 @@ export class YakuzaIntro {
     // Register settings before using them:
     YakuzaIntro.registerSettings();
 
-    console.log(`Yakuza-fy | Initializing for Foundry v${YakuzaIntro.getFoundryVersion()}`);
+    logDebug(`Yakuza-fy | Initializing for Foundry v${YakuzaIntro.getFoundryVersion()}`);
 
     // Initialize socket
     YakuzaIntro.socket = socketlib.registerModule(YakuzaIntro.ID);
@@ -45,7 +45,7 @@ export class YakuzaIntro {
   }
 
   static setupJournalButtons_v12() {
-    console.log("Yakuza-fy | Setting up journal buttons for v12");
+    logDebug("Yakuza-fy | Setting up journal buttons for v12");
     Hooks.on("getJournalSheetHeaderButtons", (sheet, buttons) => {
       if (!game.user.isGM) return;
       buttons.unshift({
@@ -58,13 +58,13 @@ export class YakuzaIntro {
   }
 
   static setupJournalButtons_v13() {
-    console.log("Yakuza-fy | Setting up journal buttons for v13");
+    logDebug("Yakuza-fy | Setting up journal buttons for v13");
     
     Hooks.on("getHeaderControlsJournalEntrySheet", (app, controls) => {
-      console.log("Yakuza-fy | Adding header button to JournalEntrySheet", app);
-      console.log("Yakuza-fy | app keys:", Object.keys(app));
-      console.log("Yakuza-fy | app.document:", app.document);
-      console.log("Yakuza-fy | app.object:", app.object);
+      logDebug("Yakuza-fy | Adding header button to JournalEntrySheet", app);
+      logDebug("Yakuza-fy | app keys:", Object.keys(app));
+      logDebug("Yakuza-fy | app.document:", app.document);
+      logDebug("Yakuza-fy | app.object:", app.object);
       
       if (!game.user.isGM) return;
       
@@ -73,46 +73,46 @@ export class YakuzaIntro {
         class: "yakuza-intro-button",
         icon: "fas fa-bomb",
         onClick: () => {
-          console.log("Yakuza-fy | Header button clicked for v13");
-          console.log("Yakuza-fy | App in onclick:", app);
+          logDebug("Yakuza-fy | Header button clicked for v13");
+          logDebug("Yakuza-fy | App in onclick:", app);
           
           // Intentar varias formas de obtener el ID
           let journalId = null;
           
           if (app.document && app.document.id) {
             journalId = app.document.id;
-            console.log("Yakuza-fy | Found ID via app.document.id:", journalId);
+            logDebug("Yakuza-fy | Found ID via app.document.id:", journalId);
           } else if (app.object && app.object.id) {
             journalId = app.object.id;
-            console.log("Yakuza-fy | Found ID via app.object.id:", journalId);
+            logDebug("Yakuza-fy | Found ID via app.object.id:", journalId);
           } else if (app.id) {
             journalId = app.id;
-            console.log("Yakuza-fy | Found ID via app.id:", journalId);
+            logDebug("Yakuza-fy | Found ID via app.id:", journalId);
           } else if (app._id) {
             journalId = app._id;
-            console.log("Yakuza-fy | Found ID via app._id:", journalId);
+            logDebug("Yakuza-fy | Found ID via app._id:", journalId);
           } else if (app.options && app.options.journalId) {
             journalId = app.options.journalId;
-            console.log("Yakuza-fy | Found ID via app.options.journalId:", journalId);
+            logDebug("Yakuza-fy | Found ID via app.options.journalId:", journalId);
           } else if (app.options && app.options.pageId) {
             // Obtener el journalId desde el pageId
             const pageId = app.options.pageId;
-            console.log("Yakuza-fy | Found pageId:", pageId);
+            logDebug("Yakuza-fy | Found pageId:", pageId);
             // Buscar journal que contiene esta página
             for (const journal of game.journal) {
               if (journal.pages && journal.pages.has(pageId)) {
                 journalId = journal.id;
-                console.log("Yakuza-fy | Found journal containing page:", journalId);
+                logDebug("Yakuza-fy | Found journal containing page:", journalId);
                 break;
               }
             }
           }
           
           if (journalId) {
-            console.log("Yakuza-fy | Triggering intro with journalId:", journalId);
+            logDebug("Yakuza-fy | Triggering intro with journalId:", journalId);
             YakuzaIntro.triggerIntroFromJournal(journalId);
           } else {
-            console.error("Yakuza-fy | Could not determine journal ID. Full app object:", app);
+            logError("Yakuza-fy | Could not determine journal ID. Full app object:", app);
             
             // Último intento: tratar de usar el DocID directamente si estamos en la hoja de un journal
             if (app instanceof JournalSheet || app.constructor.name.includes("Journal")) {
@@ -120,24 +120,24 @@ export class YakuzaIntro {
               if (sheetElement) {
                 const dataDocId = sheetElement.dataset.documentId;
                 if (dataDocId) {
-                  console.log("Yakuza-fy | Last resort - found document ID in DOM:", dataDocId);
+                  logDebug("Yakuza-fy | Last resort - found document ID in DOM:", dataDocId);
                   YakuzaIntro.triggerIntroFromJournal(dataDocId);
                   return;
                 }
               }
             }
             
-            ui.notifications.error("Could not determine journal ID.");
+            logError("Yakuza-fy | Could not determine journal ID.");
           }
         }
       });
       
-      console.log("Yakuza-fy | Button added, controls:", controls);
+      logDebug("Yakuza-fy | Button added, controls:", controls);
     });
   }
 
   static setupContextMenuHook() {
-    console.log(`Yakuza-fy | Setting up context menu hooks for v${YakuzaIntro.getFoundryVersion()}`);
+    logDebug(`Yakuza-fy | Setting up context menu hooks for v${YakuzaIntro.getFoundryVersion()}`);
     
     if (YakuzaIntro.isFoundryVersionAtLeast(13)) {
       YakuzaIntro.setupContextMenuHook_v13();
@@ -147,7 +147,7 @@ export class YakuzaIntro {
   }
 
   static setupContextMenuHook_v12() {
-    console.log("Yakuza-fy | Setting up context menu for v12");
+    logDebug("Yakuza-fy | Setting up context menu for v12");
     
     Hooks.on("getJournalDirectoryEntryContext", (html, options) => {
       if (!game.user.isGM) return;
@@ -164,20 +164,20 @@ export class YakuzaIntro {
   }
 
   static setupContextMenuHook_v13() {
-    console.log("Yakuza-fy | Setting up context menu for v13");
+    logDebug("Yakuza-fy | Setting up context menu for v13");
     
     Hooks.on("getJournalEntryContextOptions", (application, menuItems) => {
-      console.log("Yakuza-fy | Adding context menu option to JournalDirectory");
+      logDebug("Yakuza-fy | Adding context menu option to JournalDirectory");
       if (!game.user.isGM) return;
       
       menuItems.push({
         name: "Yakuza-fy",
         icon: '<i class="fas fa-bomb"></i>',
         callback: (li) => {
-          console.log("Yakuza-fy | Context menu clicked for journal: ", li);
+          logDebug("Yakuza-fy | Context menu clicked for journal: ", li);
           // In Foundry v13, the attribute has changed from documentId to entryId
           const id = li.dataset.entryId || li.dataset.documentId;
-          console.log("Yakuza-fy | Attempting to use journal ID:", id);
+          logDebug("Yakuza-fy | Attempting to use journal ID:", id);
           YakuzaIntro.triggerIntroFromJournal(id);
         }
       });
@@ -187,7 +187,7 @@ export class YakuzaIntro {
   static triggerIntroFromJournal(journalId) {
     const journal = game.journal.get(journalId);
     if (!journal) {
-      ui.notifications.error("Could not find journal entry.");
+      logError("Yakuza-fy | Could not find journal entry.");
       return;
     }
     const yakuzaData = createYakuzaDataFromDefaultJournal(journal);
@@ -198,7 +198,7 @@ export class YakuzaIntro {
     if (!game.user.isGM) return; 
     
     if (!yakuzaData || !yakuzaData.image ) {
-      ui.notifications.error("Invalid data: Must provide yakuzaData with an image.");
+      logError("Yakuza-fy | Invalid data: Must provide yakuzaData with an image.");
       return;
     }
     
@@ -206,7 +206,7 @@ export class YakuzaIntro {
     try {
       shouldGrantObserver = game.settings.get(YakuzaIntro.ID, "giveObserverPermission");
     } catch (error) {
-      console.warn("Yakuza-fy | Setting 'giveObserverPermission' not found, defaulting to false");
+      logWarning("Yakuza-fy | Setting 'giveObserverPermission' not found, defaulting to false");
     } 
     
     if (shouldGrantObserver && yakuzaData.journalId) {
@@ -227,7 +227,7 @@ export class YakuzaIntro {
     $("#yakuza-intro-overlay").remove();
 
     if (!yakuzaData.image) {
-      ui.notifications.error("Must contain an image.");
+      logError("Yakuza-fy | Must contain an image.");
       return;
     }
 
@@ -238,7 +238,7 @@ export class YakuzaIntro {
       adaptationMode = game.settings.get(YakuzaIntro.ID, "imageAdaptationMode");
       scaleFactor = game.settings.get(YakuzaIntro.ID, "imageScaleFactor");
     } catch (error) {
-      console.warn("Yakuza-fy | Could not get image adaptation settings, using defaults");
+      logWarning("Yakuza-fy | Could not get image adaptation settings, using defaults");
     }
 
     // Preload the image before creating the overlay to ensure it's fully loaded
@@ -283,7 +283,7 @@ export class YakuzaIntro {
         try {
           closeBehavior = game.settings.get(YakuzaIntro.ID, "closeBehavior");
         } catch (error) {
-          console.warn("Yakuza-fy | Setting 'closeBehavior' not found, defaulting to 'ask'");
+          logWarning("Yakuza-fy | Setting 'closeBehavior' not found, defaulting to 'ask'");
         }
         let forceClose = false;
         try {
@@ -291,7 +291,7 @@ export class YakuzaIntro {
             forceClose = game.settings.get(YakuzaIntro.ID, "forceCloseTableMap");
           }
         } catch (error) {
-          console.warn("Yakuza-fy | Setting 'forceCloseTableMap' not found or not registered");
+          logWarning("Yakuza-fy | Setting 'forceCloseTableMap' not found or not registered");
         }
         
         let tableMapUserId = null;
@@ -299,7 +299,7 @@ export class YakuzaIntro {
           try {
             tableMapUserId = game.settings.get("table-map", "userId");
           } catch (error) {
-            console.warn("Yakuza-fy | Unable to access table-map.userId setting");
+            logWarning("Yakuza-fy | Unable to access table-map.userId setting");
           } 
         }
 
@@ -399,7 +399,7 @@ export class YakuzaIntro {
     
     // If we had to normalize, log a warning
     if (normalizedScaleFactor !== scaleFactor) {
-      console.warn(`Yakuza-fy | Normalized scale factor from ${scaleFactor}% to ${normalizedScaleFactor}%`);
+      logWarning(`Yakuza-fy | Normalized scale factor from ${scaleFactor}% to ${normalizedScaleFactor}%`);
     }
     
     // Apply normalized scale factor (convert from percentage to decimal)
@@ -472,7 +472,7 @@ export class YakuzaIntro {
       'transform-origin': 'center center'
     });
     
-    console.log(`Yakuza-fy | Applied image adaptation: mode=${adaptationMode}, scale=${scale}, ` +
+    logDebug(`Yakuza-fy | Applied image adaptation: mode=${adaptationMode}, scale=${scale}, ` +
                 `image=${imageWidth}x${imageHeight} (${isImagePortrait ? 'portrait' : 'landscape'}), ` +
                 `screen=${screenWidth}x${screenHeight} (${isScreenPortrait ? 'portrait' : 'landscape'})`);
   }
@@ -538,7 +538,7 @@ export class YakuzaIntro {
         game.settings.get("table-map", "userId");
         tableMapUserIdExists = true;
       } catch (error) {
-        console.warn("Yakuza-fy | The 'table-map' module is active but 'userId' setting is not registered yet");
+        logWarning("Yakuza-fy | The 'table-map' module is active but 'userId' setting is not registered yet");
       }
     }
     

@@ -1,0 +1,61 @@
+{
+  "YAKUZA_FY": {
+    "Name": "Yakuza-fy",
+    "Button": {
+      "Label": "Yakuza-fy",
+      "Hint": "Crear una intro al estilo Yakuza"
+    },
+    "Settings": {
+      "CloseBehavior": {
+        "Name": "Comportamiento al cerrar",
+        "Hint": "Cuando el GM hace clic, ¿qué debería pasar para otros usuarios?",
+        "Choices": {
+          "ask": "Preguntar cada vez",
+          "always": "Cerrar siempre",
+          "never": "No cerrar nunca"
+        }
+      },
+      "GiveObserverPermission": {
+        "Name": "Dar permiso de observador",
+        "Hint": "Otorgar acceso de observador a todos los jugadores automáticamente"
+      },
+      "ForceCloseTableMap": {
+        "Name": "Forzar cierre para usuario de Table Map",
+        "Hint": "Cerrar siempre la intro para el usuario de Table Map independientemente de la configuración"
+      },
+      "ImageAdaptationMode": {
+        "Name": "Modo de adaptación de imagen",
+        "Hint": "Cómo se deben mostrar las imágenes en la intro",
+        "Choices": {
+          "auto": "Automático (según orientación de imagen y pantalla)",
+          "width": "Ajustar al ancho",
+          "height": "Ajustar a la altura",
+          "contain": "Contener (mostrar imagen completa, puede tener espacio vacío)"
+        }
+      },
+      "ImageScaleFactor": {
+        "Name": "Factor de escala de imagen",
+        "Hint": "Escalar el tamaño de la imagen (75% a 125%)"
+      },
+      "CloseDialog": {
+        "Title": "¿Cerrar para todos los jugadores?",
+        "Content": "¿Quieres cerrar la intro para todos los jugadores?",
+        "Yes": "Sí",
+        "No": "No"
+      }
+    },
+    "Notifications": {
+      "NoImage": "Debe contener una imagen.",
+      "JournalNotFound": "No se pudo encontrar la entrada del diario.",
+      "InvalidData": "Datos inválidos: Debe proporcionar yakuzaData con una imagen.",
+      "ApiNotAvailable": "API de Yakuza-fy no disponible.",
+      "NoJournalId": "No se pudo determinar el ID del diario."
+    },
+    "Keybindings": {
+      "CloseIntro": {
+        "Name": "Cerrar intro",
+        "Hint": "Tecla de acceso rápido para cerrar la intro para todos los jugadores"
+      }
+    }
+  }
+}
