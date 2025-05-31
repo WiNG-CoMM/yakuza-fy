@@ -18,8 +18,8 @@ export function buildTextElements(title, subtitle1, subtitle2) {
   return `
     <div class="yakuza-intro-text-wrapper">
       <div class="yakuza-intro-text yakuza-title">${title}</div>
-      <div class="yakuza-intro-text yakuza-subtitle">${subtitle1}</div>
-      <div class="yakuza-intro-text yakuza-subtitle">${subtitle2}</div>
+      ${subtitle1 ? `<div class="yakuza-intro-text yakuza-subtitle">${subtitle1}</div>` : ''}
+      ${subtitle2 ? `<div class="yakuza-intro-text yakuza-subtitle">${subtitle2}</div>` : ''}
     </div>
   `;
 }
